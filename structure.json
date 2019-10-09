@@ -1,0 +1,32 @@
+{
+  "structure": [
+    {
+      "type": "arm",
+      "machine_name": "arm1",
+      "group_name": "manipulator",
+      "parameter":{
+        "base": "arm1/base_link",
+        "target": "arm1/base_link"
+      }
+    },
+    {
+      "type": "hand",
+      "machine_name": "generic_hand",
+      "parameter":{
+      }
+    },
+    {
+      "type": "force",
+      "machine_name": "arm1",
+      "parameter":{
+      }
+    },
+    {
+      "type": "io",
+      "machine_name": "arm1",
+      "parameter":{
+      }
+    }
+  ]
+}
+
