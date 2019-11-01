@@ -32,6 +32,9 @@ from task_common.key import scenario_key
 # from task_common.action_interface import action_manager
 from task_common.action_interface import common
 import math
+import rospy
+import tf
+from geometry_msgs.msg import TransformStamped, Vector3
 
 TOOL_MOVE_FIXED_Z = 100
 
@@ -58,11 +61,10 @@ def move_approach_position(action_manager, arm_name, param):
     """
     appr_param = param.copy()
     # 座標計算
-    if scenario_key.PARAM_KEY_ARM_DOWN_DISTANCE in param:
-        appr_param[scenario_key.PARAM_KEY_COMMON_Z] = param[scenario_key.PARAM_KEY_COMMON_Z] + param[scenario_key.PARAM_KEY_ARM_DOWN_DISTANCE]
-
-    else:
-        appr_param[scenario_key.PARAM_KEY_COMMON_Z] = param[scenario_key.PARAM_KEY_COMMON_Z] + TOOL_MOVE_FIXED_Z
+    position, _ = _get_approach_position(appr_param)
+    appr_param[scenario_key.PARAM_KEY_COMMON_X] = position[0]
+    appr_param[scenario_key.PARAM_KEY_COMMON_Y] = position[1]
+    appr_param[scenario_key.PARAM_KEY_COMMON_Z] = position[2]
     # キー名変更
     if scenario_key.PARAM_KEY_ARM_PLAN_KEY in param and param[scenario_key.PARAM_KEY_ARM_PLAN_KEY] is not None:
         appr_param[scenario_key.PARAM_KEY_ARM_PLAN_KEY] = param[scenario_key.PARAM_KEY_ARM_PLAN_KEY] + "_AP"
@@ -178,3 +180,36 @@ def relative_move(action_manager, arm_name, param):
         result, _ = action_manager.arm_operation(arm_name, scenario_key.ARM_MOTION_LINE_MOVE, rel_param)
 
     return result
+
+def _get_approach_position(param):
+    """
+    ターゲット座標からアプローチ座標を算出
+    """
+    down_dis = TOOL_MOVE_FIXED_Z
+    if scenario_key.PARAM_KEY_ARM_DOWN_DISTANCE in param:
+        down_dis = param[scenario_key.PARAM_KEY_ARM_DOWN_DISTANCE]
+
+    t = tf.Transformer(True, rospy.Duration(10.0))
+
+    # target
+    tp = TransformStamped()
+    tp.header.frame_id = 'BASE_LINK'
+    tp.child_frame_id = 'OBJECT'
+    tp.transform.translation = Vector3(param[scenario_key.PARAM_KEY_COMMON_X], param[scenario_key.PARAM_KEY_COMMON_Y], param[scenario_key.PARAM_KEY_COMMON_Z])
+    tp.transform.rotation = common.degree_to_quaternion(param[scenario_key.PARAM_KEY_COMMON_RX], param[scenario_key.PARAM_KEY_COMMON_RY], param[scenario_key.PARAM_KEY_COMMON_RZ])
+
+    t.setTransform(tp)
+
+    # approach
+    ap = TransformStamped()
+    ap.header.frame_id = 'OBJECT'
+    ap.child_frame_id = 'APPROACH'
+    ap.transform.translation = Vector3(0, 0, -down_dis)
+    ap.transform.rotation = common.degree_to_quaternion(0, 0, 0)
+
+    t.setTransform(ap)
+
+    position, quaternion = t.lookupTransform('BASE_LINK', 'APPROACH', rospy.Time(0))
+    return position, quaternion
+
+    
