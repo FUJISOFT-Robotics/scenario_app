@@ -32,6 +32,8 @@ import math
 import tf
 from geometry_msgs.msg import Vector3
 from geometry_msgs.msg import Quaternion
+import rospy
+from time import sleep
 
 
 def calc_coordinate_correction(base_point, target_point, difference_value):
@@ -107,3 +109,8 @@ def degree_to_quaternion(x, y, z):
     euler = Vector3(math.radians(x), math.radians(y), math.radians(z))
     q = tf.transformations.quaternion_from_euler(euler.z, euler.y, euler.x, 'rzyx')
     return Quaternion(x=q[0], y=q[1], z=q[2], w=q[3])
+
+
+def scenario_pose(path):
+    while rospy.get_param(path, False):
+        sleep(0.1)
