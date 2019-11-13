@@ -53,7 +53,7 @@ class ArmRobot:
     global_param = {}
     plan_cache = {}
     JOINT_TOLERANCE = 0.01
-    ROSPARAM_PATH = "/scenario/pose"
+    ROSPARAM_PATH = "/scenario/pause"
 
     def __init__(self, group, base_origin, target_frame, robot_name=None):
         """
@@ -108,23 +108,23 @@ class ArmRobot:
         """
         data = {}
         if func == "move":
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result, data = self.move(param)
         elif func == "tool_move":
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result, data = self.tool_move(param)
         elif func == "move_home":
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result = self.move_home()
         elif func == "get_position":
             result, data = self.get_position()
         elif func == "get_current_joint":
             result, data = self.get_current_joint()
         elif func == "line_move":
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result, data = self.line_move(param)
         elif func == "joint_move":
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result, data = self.joint_move(param)
         elif func == "get_object_position":
             result, data = self.get_object_position(param)

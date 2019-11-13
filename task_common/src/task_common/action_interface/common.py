@@ -111,6 +111,6 @@ def degree_to_quaternion(x, y, z):
     return Quaternion(x=q[0], y=q[1], z=q[2], w=q[3])
 
 
-def scenario_pose(path):
+def scenario_pause(path):
     while rospy.get_param(path, False):
         sleep(0.1)

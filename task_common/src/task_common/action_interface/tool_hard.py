@@ -39,7 +39,7 @@ class ToolHard:
     アームロボット
     """
     _STRING_TRUE = "True"
-    ROSPARAM_PATH = "/scenario/pose"
+    ROSPARAM_PATH = "/scenario/Pause"
 
     def __init__(self, tool_name):
         """
@@ -62,11 +62,11 @@ class ToolHard:
         # 他クラスと戻り値をあわせる為に空の変数を定義
         data = {}
         if func == scenario_key.TOOL_MOTION_HAND_OPEN:
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result, data = self.tool_hand_open(param[scenario_key.PARAM_KEY_TOOL_WAIT])
 
         elif func == scenario_key.TOOL_MOTION_HAND_CLOSE:
-            common.scenario_pose(self.ROSPARAM_PATH)
+            common.scenario_pause(self.ROSPARAM_PATH)
             result, data = self.tool_hand_close(param[scenario_key.PARAM_KEY_TOOL_WAIT])
 
         else:
