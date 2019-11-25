@@ -101,8 +101,6 @@ def pick(action_manager, param):
 
         # ハンドを閉じる
         result = hand.hand_close(action_manager, hand_name)
-        # TODO 連続でmove命令を出すとプラン時にstart位置の異常で動かない時があるのでsleepを実施
-        sleep(0.1)
 
         # ピック位置から退避
         result = arm.move_departure_position(action_manager, arm_name, param)

@@ -145,8 +145,6 @@ class ArmRobot:
 
     def move(self, param):
 
-        time.sleep(0.1)
-
         return_param = {}
 
         # パラメータ判定
@@ -239,8 +237,6 @@ class ArmRobot:
         return True, return_param
 
     def tool_move(self, param):
-
-        time.sleep(0.1)
 
         return_param = {}
         result = False
@@ -443,13 +439,16 @@ class ArmRobot:
         end_time = time.time() - start_time
         print("_plan_move_start time:{}".format(end_time))
         # 速度設定
-        plan = self.group1.retime_trajectory(self.robot.get_current_state(), plan, velocity)
-        result = self.group1.execute(plan, wait=True)
+        retime = self.group1.retime_trajectory(self.robot.get_current_state(), plan, velocity)
+        result = self.group1.execute(retime, wait=True)
         if result is False:
             raise MoveException("Robot Move Error")
 
     def _cartesian_plan(self, waypoints):
+        state = self.robot.get_current_state()
+        self.group1.set_start_state(state)
         (plan, fraction) = self.group1.compute_cartesian_path(waypoints, 0.01, 0.0)
+        self.group1.set_start_state_to_current_state()
         if fraction != 1.0:
             raise PlanningException("Planning Error")
         return plan

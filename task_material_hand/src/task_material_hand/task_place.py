@@ -30,7 +30,6 @@
 
 from task_common.key import scenario_key
 from task_common.motion_interface import arm, hand, force
-from time import sleep
 
 
 def place(action_manager, param):
@@ -82,8 +81,6 @@ def place(action_manager, param):
 
     # ハンドを開く
     result = hand.hand_open(action_manager, hand_name)
-    # TODO 連続でmove命令を出すとプラン時にstart位置の異常で動かない時があるのでsleepを実施
-    sleep(0.1)
 
     # プレイス位置から退避
     result = arm.move_departure_position(action_manager, arm_name, param)
