@@ -83,7 +83,6 @@ class ArmRobot:
         # MoveGroupを生成
         for name in group_names:
             self._group_list[name] = moveit_commander.MoveGroupCommander(name)
-            self._group_list[name].set_goal_joint_tolerance(self.JOINT_TOLERANCE)
             self._group_list[name].set_goal_position_tolerance(0.0005)
             self._group_list[name].set_goal_orientation_tolerance(0.0005)
         self.group1 = self._group_list[self._default_group]
