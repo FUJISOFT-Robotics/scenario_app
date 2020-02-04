@@ -2,11 +2,11 @@
   "structure": [
     {
       "type": "arm",
-      "machine_name": "arm1",
+      "machine_name": "",
       "group_name": "manipulator",
       "parameter":{
-        "base": "arm1/base_link",
-        "target": "arm1/base_link"
+        "base": "base_link",
+        "target": "base_link"
       }
     },
     {
@@ -17,16 +17,9 @@
     },
     {
       "type": "force",
-      "machine_name": "arm1",
-      "parameter":{
-      }
-    },
-    {
-      "type": "io",
-      "machine_name": "arm1",
+      "machine_name": "",
       "parameter":{
       }
     }
   ]
 }
-

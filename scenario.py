@@ -45,45 +45,39 @@ file1.close()
 tm = TaskManager(structure_info)
 print "ホーム移動"
 # ホームに移動
-arm_name1 = "arm1"
-#tm.task_execute_home(arm_name1)
+arm_nm = ""
+hand_nm = "generic_hand"
+tool_nm = "manipulator"
+velocity = 0.5
+
+tm.task_execute_home(arm_nm)
 
 # 移動
-pos = position.Position(-446.19, -2.92, 327.50, 0.0, 0.0, 180.0, 3)
-velocity = 0.2
-#tm.task_execute_move(arm_name1, pos, "force_sensor", velocity)
-
-#tm.task_execute_move(arm_name, pos, tool_name, velocity)
+pos = position.Position(-446.19, -2.92, 327.50, 0.0, 0.0, 180.0)
+tm.task_execute_move(arm_nm, pos, tool_nm, velocity)
 
 # ピック
-pick_pos = position.Position(-446.19, -2.92, 327.50, 0.0, 0.0, 180.0, 3)
-#pick_pos = position.Position(-446.19, -2.92, 332.50, 0.0, 0.0, 180.0, 3)
-foption = force_option.ForceOption(axis="z", newton=-2, pick_check=True, failed_upper_limit=3)
+pick_pos = position.Position(-446.19, -2.92, 327.50, 0.0, 0.0, 180.0)
+#foption = force_option.ForceOption(axis="z", newton=-2, pick_check=True, failed_upper_limit=3)
 pick_result = tm.task_execute_pick( \
-                     arm_name = arm_name1, \
-                     hand_name = "generic_hand", \
+                     arm_name = arm_nm, \
+                     hand_name = hand_nm, \
                      pos = pick_pos, \
-                     tool_name = "force_sensor", \
-                     velocity=0.1, \
-                     precision_velocity=0.1, \
-#                     down_distance=250, \
+                     tool_name = tool_nm, \
+                     velocity=velocity, \
+                     precision_velocity=velocity, \
                      down_distance=100, \
-#                     force_option=foption, \
                     )
 
-#if pick_result == False:
-#    exit()
 # プレイス
-place_pos = position.Position(-446.19, -2.92, 327.50, 0.0, 0.0, 180.0, 3)
-#place_pos = position.Position(-446.19, -2.92, 332.50, 0.0, 0.0, 180.0, 3)
-#tm.task_execute_place( \
-#                      arm_name = arm_name1, \
-#                      hand_name = "generic_hand", \
-#                      pos = place_pos, \
-#                      tool_name = "force_sensor", \
-#                      velocity=0.1, \
-#                      precision_velocity=0.1, \
-#                      down_distance=250, \
-#                      down_distance=100, \
-#                      force_option=foption \
-#                     )
+place_pos = position.Position(-346.19, -2.92, 327.50, 0.0, 0.0, 180.0)
+tm.task_execute_place( \
+                     arm_name = arm_nm, \
+                     hand_name = hand_nm, \
+                     pos = place_pos, \
+                     tool_name = tool_nm, \
+                     velocity=velocity, \
+                     precision_velocity=velocity, \
+                     down_distance=100, \
+#                     force_option=foption \
+                    )
