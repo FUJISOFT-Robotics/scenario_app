@@ -200,7 +200,7 @@ class ArmRobot:
         # print ("joint_list:")
         # print (joint_list)
         # self.group1.set_joint_value_target(joint_list)
-        self._plan_move(param[scenario_key.PARAM_KEY_ARM_PLAN_KEY])
+        self._plan_move(param[scenario_key.PARAM_KEY_ARM_PLAN_KEY], param[scenario_key.PARAM_KEY_ARM_VELOCITY])
 
         return True, return_param
 
@@ -215,7 +215,7 @@ class ArmRobot:
         rad = map(lambda x: math.radians(x), joint_list)
         print("rad:{}".format(rad))
         self.group1.set_joint_value_target(rad)
-        self._plan_move(param[scenario_key.PARAM_KEY_ARM_PLAN_KEY])
+        self._plan_move(param[scenario_key.PARAM_KEY_ARM_PLAN_KEY], param[scenario_key.PARAM_KEY_ARM_VELOCITY])
         return_param = {}
         return True, return_param
 
@@ -388,7 +388,7 @@ class ArmRobot:
             return_param['position'] = position.Position(obj_pose[0][0] * 1000, obj_pose[0][1] * 1000, obj_pose[0][2] * 1000, euler[0], euler[1], euler[2])
             return True, return_param
 
-    def _plan_move(self, key):
+    def _plan_move(self, key, velocity):
         start_time = time.time()
         # 経路生成
         if key in self.plan_cache:
@@ -408,9 +408,13 @@ class ArmRobot:
             self.plan_cache[key] = plan
         end_time = time.time() - start_time
         print("_plan_move_start time:{}".format(end_time))
-        result = self.group1.execute(plan, wait=True)
-        if result is False:
-            raise MoveException("Robot Move Error")
+        if len(plan.joint_trajectory.points) > 1:
+            retime = self.group1.retime_trajectory(self.robot.get_current_state(), plan, velocity, algorithm = "time_optimal_trajectory_generation")
+            result = self.group1.execute(retime, wait=True)
+            if result is False:
+                raise MoveException("Robot Move Error")
+        else:
+            print("Canceled move execution because the planned joint trajectory size is 1")
 
     def _plan(self):
         plan = self.group1.plan()
@@ -438,7 +442,7 @@ class ArmRobot:
         end_time = time.time() - start_time
         print("_plan_move_start time:{}".format(end_time))
         # 速度設定
-        retime = self.group1.retime_trajectory(self.robot.get_current_state(), plan, velocity)
+        retime = self.group1.retime_trajectory(self.robot.get_current_state(), plan, velocity, algorithm = "time_optimal_trajectory_generation")
         result = self.group1.execute(retime, wait=True)
         if result is False:
             raise MoveException("Robot Move Error")
