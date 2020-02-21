@@ -44,12 +44,12 @@ class Palletizing:
     def __init__(self, pos1, pos2, pos3,
                  size_x, size_y, z=0, size_z=1, pattern=Pattern.ZIGZAG):
         # インスタンス変数定義
-        self.max_size_x = size_x
-        self.max_size_y = size_y
-        self.max_size_z = size_z
-        self.next_x = 0
-        self.next_y = 0
-        self.next_z = 0
+        self._max_size_x = size_x
+        self._max_size_y = size_y
+        self._max_size_z = size_z
+        self._next_x = 0
+        self._next_y = 0
+        self._next_z = 0
 
         relative_x = self._get_relative_position(pos1, pos2)
         relative_y = self._get_relative_position(pos1, pos3)
@@ -84,19 +84,19 @@ class Palletizing:
         return self._palletizing_pos_3d[index_z][index_y][index_x]
 
     def get_next_pos(self):
-        position = self._palletizing_pos_3d[self.next_z][self.next_y][self.next_x]
+        position = self._palletizing_pos_3d[self._next_z][self._next_y][self._next_x]
 
         # 次のインデックスに進める
-        self.next_x += 1
-        if self.max_size_x <= self.next_x:
-            self.next_x = 0
-            self.next_y += 1
-            if self.max_size_y <= self.next_y:
-                self.next_y = 0
-                self.next_z += 1
-                if self.max_size_z <= self.next_z:
+        self._next_x += 1
+        if self._max_size_x <= self._next_x:
+            self._next_x = 0
+            self._next_y += 1
+            if self._max_size_y <= self._next_y:
+                self._next_y = 0
+                self._next_z += 1
+                if self._max_size_z <= self._next_z:
                     # 最初のインデックスに戻る
-                    self.next_z = 0
+                    self._next_z = 0
         return position
 
     def _get_z_position(self, pos1, pos2, pos3, relative1, relative2, height):
