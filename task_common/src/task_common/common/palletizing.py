@@ -50,9 +50,6 @@ class Palletizing:
         self._next_x = 0
         self._next_y = 0
         self._next_z = 0
-        self._top_next_x = 0
-        self._top_next_y = 0
-        self._top_next_z = self._max_size_z - 1
 
         relative_x = self._get_relative_position(pos1, pos2)
         relative_y = self._get_relative_position(pos1, pos3)
@@ -100,22 +97,6 @@ class Palletizing:
                 if self._max_size_z <= self._next_z:
                     # 最初のインデックスに戻る
                     self._next_z = 0
-        return position
-
-    def get_next_pos_top(self):
-        position = self._palletizing_pos_3d[self._top_next_z][self._top_next_y][self._top_next_x]
-
-        # 次のインデックスに進める
-        self._top_next_x += 1
-        if self._max_size_x <= self._top_next_x:
-            self._top_next_x = 0
-            self._top_next_y += 1
-            if self._max_size_y <= self._top_next_y:
-                self._top_next_y = 0
-                self._top_next_z -= 1
-                if -1 >= self._top_next_z:
-                    # 最初のインデックスに戻る
-                    self._top_next_z = self._max_size_z - 1
         return position
 
     def _get_z_position(self, pos1, pos2, pos3, relative1, relative2, height):
